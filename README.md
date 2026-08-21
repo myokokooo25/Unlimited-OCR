@@ -45,6 +45,34 @@
 
 ## Inference
 
+### Local NVIDIA GPU (Windows / Linux)
+
+Use this path on a personal PC. It does **not** use the Cursor cloud agent (that machine has no GPU).
+
+Windows (PowerShell):
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\setup_local.ps1
+.\.venv\Scripts\Activate.ps1
+python infer_local.py --check-gpu
+python infer_local.py --pdf .\Unlimited-OCR.pdf --output_dir .\outputs --max_pages 1
+```
+
+Linux:
+
+```shell
+chmod +x setup_local.sh
+./setup_local.sh
+source .venv/bin/activate
+python infer_local.py --check-gpu
+python infer_local.py --pdf ./Unlimited-OCR.pdf --output_dir ./outputs --max_pages 1
+```
+
+`setup_local.*` installs CUDA PyTorch plus `requirements-local.txt`. The first inference run downloads `baidu/Unlimited-OCR` from Hugging Face (several GB). You need an NVIDIA GPU with about 8 GB VRAM.
+
+SGLang (`infer.py`) is optional and is aimed at Linux servers. Prefer `infer_local.py` on a Windows GeForce PC.
+
 ### Transformers
 Inference using Huggingface transformers on NVIDIA GPUs. Requirements tested on python 3.12.3 + CUDA12.9：
 
