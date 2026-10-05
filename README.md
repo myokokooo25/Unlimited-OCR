@@ -290,6 +290,22 @@ Useful options:
 --model_dir baidu/Unlimited-OCR   # Local path or Hugging Face model ID
 --gpu 0                           # CUDA_VISIBLE_DEVICES value
 --server_log ./log/sglang_server.log
+--dry-run                         # Plan jobs without starting SGLang
+```
+
+## Testing
+
+GPU inference needs NVIDIA CUDA. The CPU test suite covers `infer.py` helpers and does not download model weights:
+
+```shell
+pip install -r requirements-test.txt
+python -m pytest tests/ -v
+```
+
+Preview a batch without launching the SGLang server:
+
+```shell
+python infer.py --pdf ./Unlimited-OCR.pdf --output_dir ./outputs --dry-run
 ```
 
 For OmniDocBench evaluation, you need to perform the following post-processing.

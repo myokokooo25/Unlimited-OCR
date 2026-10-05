@@ -313,11 +313,35 @@ def parse_args():
     parser.add_argument("--model_dir", default="baidu/Unlimited-OCR")
     parser.add_argument("--image_mode", choices=("gundam", "base"), default="gundam")
     parser.add_argument("--server_log", default="./log/sglang_server.log")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Plan jobs and print them without starting SGLang or sending requests",
+    )
     return parser.parse_args()
+
+
+def dry_run(args):
+    jobs = build_jobs(args)
+    mode = "pdf_pages" if args.pdf else "dataset_images"
+    print(
+        f"Dry run: mode={mode}, requests={len(jobs)}, "
+        f"concurrency={args.concurrency}, image_mode={args.image_mode}"
+    )
+    preview = jobs[:20]
+    for i, (image_path, output_file) in enumerate(preview, 1):
+        print(f"  [{i}] {image_path} -> {output_file}")
+    remaining = len(jobs) - len(preview)
+    if remaining:
+        print(f"  ... {remaining} more")
 
 
 def main():
     args = parse_args()
+    if args.dry_run:
+        dry_run(args)
+        return
+
     server_process = start_server(args)
     try:
         run(args)
